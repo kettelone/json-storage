@@ -1,10 +1,15 @@
-const File = require('../models/request')
-const baseUrl = '/json-storage/'
+import {File} from '../models/request'
+import {Request} from '../models/interfaces'
 
-const addFile = async (req) => {
+
+const addFile = async (req: Request): Promise< any | string > => {
   try {
     let { url, body } = req
-    url = url.substring(baseUrl.length)
+    url = url.substring(1)
+
+    if (!url) {
+      return 'Please specify your desired route'
+    }
     //проверить есть ли файл с таким url
     let exist = await File.find({ url })
     if (exist.length === 0) {
@@ -22,10 +27,10 @@ const addFile = async (req) => {
   }
 }
 
-const getFile = async (req) => {
+const getFile = async (req: Request): Promise< any | string> => {
   try {
     let { url } = req
-    url = url.substring(baseUrl.length)
+    url = url.substring(1)
 
     //проверить есть ли файл с таким url
     let file = await File.find({ url })
@@ -38,7 +43,7 @@ const getFile = async (req) => {
   }
 }
 
-module.exports = {
+export {
   addFile,
   getFile,
 }

@@ -1,8 +1,9 @@
 require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
-const { addFile, getFile } = require('./controllers/jsonController')
+import express from 'express'
+import mongoose from 'mongoose'
+import bodyParser from 'body-parser'
+import { addFile, getFile }  from './controllers/jsonController'
+import {Request} from './models/interfaces'
 
 const app = express()
 const dbURI = `mongodb+srv://mypersonalusername:${process.env.MONGODB_PASSWORD}@cluster0.iv3yp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
@@ -12,18 +13,22 @@ const connectToDB = async () => {
     await mongoose.connect(dbURI)
     console.log('conneted to db')
   } catch (error) {
-    handleError(error)
+   console.log(error)
   }
 }
 
 app.use(bodyParser.json())
 
-app.get('/json-storage/*', async (req, res) => {
+app.get('/', async (req:Request, res:any) => {
+  res.json('Please specify your desired route')
+})
+
+app.get('/*', async (req:Request, res:any) => {
   let file = await getFile(req)
   res.json(file)
 })
 
-app.post('/json-storage/*', async (req, res) => {
+app.post('/*', async (req:Request, res:any) => {
   const file = await addFile(req)
   res.json(file)
 })
