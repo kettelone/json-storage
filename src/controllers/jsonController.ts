@@ -2,13 +2,13 @@ import {File} from '../models/request'
 import {Request} from '../models/interfaces'
 
 
-const addFile = async (req: Request): Promise< any | string > => {
+const addFile = async (req: Request): Promise< object | undefined > => {
   try {
     let { url, body } = req
     url = url.substring(1)
 
     if (!url) {
-      return 'Please specify your desired route'
+      return {message:'Please specify your desired route'}
     }
     //проверить есть ли файл с таким url
     let exist = await File.find({ url })
@@ -24,10 +24,10 @@ const addFile = async (req: Request): Promise< any | string > => {
     }
   } catch (e) {
     console.log(e)
-  }
+  } 
 }
 
-const getFile = async (req: Request): Promise< any | string> => {
+const getFile = async (req: Request): Promise< object | undefined> => {
   try {
     let { url } = req
     url = url.substring(1)
@@ -35,7 +35,7 @@ const getFile = async (req: Request): Promise< any | string> => {
     //проверить есть ли файл с таким url
     let file = await File.find({ url })
     if (file.length === 0) {
-      return 'There is no such url in json storage'
+      return { message: 'There is no such url in json storage' }
     }
     return file[0].body
   } catch (e) {
